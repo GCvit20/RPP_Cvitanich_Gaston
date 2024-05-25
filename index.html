@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script >
+        document.addEventListener('DOMContentLoaded', function() 
+        {
+
+            class Vehiculo
+            {
+                constructor(id, modelo, anoFabricacion, velMax)
+                {
+                    if (typeof id !== 'number' || id <= 0) 
+                    {
+                        console.log('El ID debe ser un número entero positivo.');
+                    }
+                    if (typeof modelo !== 'string' || modelo.trim() === '') 
+                    {
+                        console.log('El modelo no puede estar vacío.');
+                    }
+                    if (typeof anoFabricacion !== 'number' || anoFabricacion <= 1985) 
+                    {
+                        console.log('El año de fabricacion debe ser mayor a 1985');
+                    }
+                    if (typeof velMax !== 'number' || velMax <= 0) 
+                    {
+                        console.log('La velocidad debe ser mayor a 0');
+                    }
+
+                    this.id = id;
+                    this.modelo = modelo;
+                    this.anoFabricacion = anoFabricacion;
+                    this.velMax = velMax;
+                }
+
+                toString() 
+                {
+                    return `Modelo: ${this.modelo}, Año de fabricacion: ${this.anoFabricacion}, Velocidad maxima: ${this.velMax}`;
+                }
+            }
+
+            class Auto extends Vehiculo
+            {
+                constructor(id, modelo, anoFabricacion, velMax, cantidadPuertas, asientos)
+                {
+                    if ((typeof cantidadPuertas !== 'number' || dni <= 2) && (typeof asientos !== 'number' || asientos <= 2)) 
+                    {
+                        console.log('La cantidad de puertas y asientos debe ser mayor a 2');
+                    }
+
+                    super(id, modelo, anoFabricacion, velMax);
+                    this.cantidadPuertas = cantidadPuertas;
+                    this.asientos = asientos;
+                }
+
+                toString() 
+                {
+                    return `${super.toString()}, Cantidad de puertas: ${this.cantidadPuertas}, Cantidad de asientos: ${this.asientos}`;
+                }
+            }
+
+            class Camion extends Vehiculo
+            {
+                constructor(id, modelo, anoFabricacion, velMax, carga, autonomia)
+                {
+                    if ((typeof carga !== 'number' || carga <= 0) && (typeof autonomia !== 'number' || autonomia <= 0)) 
+                    {
+                        console.log('La carga y la autonomia deben ser numeros positivos mayores a 0');
+                    }
+
+                    super(id, modelo, anoFabricacion, velMax);
+                    this.carga = carga;
+                    this.autonomia = autonomia;
+                }
+
+                toString() 
+                {
+                    return `${super.toString()}, Carga: ${this.carga}, Autonomia: ${this.autonomia}`;
+                }
+
+            }
+        
+            //Datos de las vehiculos
+            const data = '[{"id":1,"modelo":"Fiat 100","anoFabricacion":1987,"velMax":60,"cantidadPuertas":4,"asientos":4},{"id":2,"modelo":"Ford Mustang","anoFabricacion":1960,"velMax":100,"cantidadPuertas":2,"asientos":2},{"id":3,"modelo":"Ferrary F100","anoFabricacion":1999,"velMax":200,"cantidadPuertas":2,"asientos":2},{"id":4,"modelo":"Escania","anoFabricaci on":1987,"velMax":60,"carga":5550,"autonomia":300},{"id":5,"modelo":"Dodge Ram","anoFabricacion":1970,"velMax":100,"carga":2333,"autonomia":400},{"id":666,"modelo":"Chevy Silverado","anoFabricacion":1994,"velMax":80,"carga":1000,"autonomia":450}]'
+
+            const vehiculos = JSON.parse(data);
+
+            //Recorremos la lista de vehiculos y clasificamos a los Autos y Camiones 
+            const Autos = vehiculos.filter(obj => obj.hasOwnProperty("cantidadPuertas") && obj.hasOwnProperty("asientos"));
+            const Camiones = vehiculos.filter(obj => obj.hasOwnProperty("carga") && obj.hasOwnProperty("autonomia"));
+
+
+        function cargarFormularioSinFiltro()
+        {
+            vehiculos.forEach((vehiculos) => 
+            {
+                const tabla = document.getElementById("tablaDatos");
+                const fila = document.createElement("tr");
+                fila.innerHTML = `
+                    <td>${vehiculos.id}</td>
+                    <td>${vehiculos.modelo}</td>
+                    <td>${vehiculos.anoFabricacion}</td>
+                    <td>${vehiculos.velMax}</td>
+                    <td>${vehiculos.cantidadPuertas || "-"}</td>
+                    <td>${vehiculos.asientos || "-"}</td>
+                    <td>${vehiculos.carga || "-"}</td>
+                    <td>${vehiculos.autonomia || "-"}</td>
+
+                `;
+                tabla.appendChild(fila);
+            });
+        }
+
+        cargarFormularioSinFiltro();
+
+        function llenarFomularioCamiones()
+        {
+            Camiones.forEach((Camion) => 
+            {
+                const tabla = document.getElementById("tablaDatos");
+                const fila = document.createElement("tr");
+
+                fila.innerHTML = `
+                    <td>${Camion.id}</td>
+                    <td>${Camion.modelo}</td>
+                    <td>${Camion.anoFabricacion}</td>
+                    <td>${Camion.velMax}</td>
+                    <td>${"-"}</td>
+                    <td>${"-"}</td>
+                    <td>${Camion.carga}</td>
+                    <td>${Camion.autonomia}</td>
+                `;
+
+                tabla.appendChild(fila);
+            });
+        }
+
+        function llenarFomularioAutos()
+        {
+            Autos.forEach((Auto) => 
+            {
+                const tabla = document.getElementById("tablaDatos");
+                const fila = document.createElement("tr");
+
+                    fila.innerHTML = `
+                    <td>${Auto.id}</td>
+                    <td>${Auto.modelo}</td>
+                    <td>${Auto.anoFabricacion}</td>
+                    <td>${Auto.velMax}</td>
+                    <td>${Auto.cantidadPuertas}</td>
+                    <td>${Auto.asientos}</td>
+                    <td>${"-"}</td>
+                    <td>${"-"}</td>
+                    `;
+
+                tabla.appendChild(fila);
+            });
+        }
+
+
+        const filtro = document.getElementById("filtro");
+        filtro.addEventListener("change", filtrar_datos);
+
+        function filtrar_datos() 
+        {
+            const tipoSeleccionado = document.getElementById("filtro").value;
+            const tabla = document.getElementById("tablaDatos");
+
+            tabla.innerHTML = "";
+
+            switch (tipoSeleccionado) 
+            {
+                case "Camiones":
+                    llenarFomularioCamiones();
+                break;
+                case "Autos":
+                    llenarFomularioAutos();
+                break;
+                default:
+                    cargarFormularioSinFiltro();
+                break;
+            }
+        }
+
+        function calcularPromedioVelocidadMaxima(filtro) 
+        {
+            const sumaVelocidadesMaximas = filtro.reduce((suma, vehiculo) => 
+            {
+                return suma + vehiculo.velMax;
+            }, 0);
+
+            const promedioVelocidadMaxima = sumaVelocidadesMaximas / filtro.length;
+
+            return promedioVelocidadMaxima;
+        }
+
+        function btn_calcular_promedio() 
+        {
+            let filtro = document.getElementById("filtro").value;
+            let promedio = 0;
+
+            switch (filtro) {
+                case "Camiones":
+                    promedio = calcularPromedioVelocidadMaxima(Camiones);
+                    break;
+                case "Autos":
+                    promedio = calcularPromedioVelocidadMaxima(Autos);
+                    break;
+                default:
+                    promedio = calcularPromedioVelocidadMaxima(vehiculos);
+                    break;
+            }
+
+            const textbox = document.getElementById("velocidadMaxima");
+            textbox.value = promedio.toFixed(2);
+        }
+
+        document.getElementById("btnCalcular").onclick = btn_calcular_promedio;
+
+        function EliminaColumna()
+        {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            
+            checkboxes.forEach(checkbox => 
+            {
+                checkbox.addEventListener('change', () => 
+                {
+                    const columnIndex = parseInt(checkbox.value);
+                    
+                    const columns = document.querySelectorAll('tbody tr td:nth-child(' + (columnIndex + 1) + ')');
+                    columns.forEach(column => 
+                    {
+                        column.classList.toggle('hidden-column', !checkbox.checked);
+                        const headerColumn = document.querySelector('thead tr th:nth-child(' + (columnIndex + 1) + ')');
+                        headerColumn.classList.toggle('hidden-column', !checkbox.checked);
+                    });
+                });
+            });
+        }
+
+        EliminaColumna();
+
+        function selecciontabla() 
+        {
+            document.getElementById("tablaDatos").addEventListener("dblclick", (event) => 
+            {
+                const fila = event.target.closest("tr");
+                if (!fila || fila.querySelector("th")) return;
+
+                const esAuto = fila.cells[4].textContent !== "-" && fila.cells[5].textContent !== "-";
+
+                const [id, modelo, anoFabricacion, velMax, cantidadPuertas, asientos, carga, autonomia] = fila.cells;
+
+                document.getElementById("id").value = id.textContent;
+                document.getElementById("modelo").value = modelo.textContent;
+                document.getElementById("anoFabricacion").value = anoFabricacion.textContent;
+                document.getElementById("velMax").value = velMax.textContent;
+                document.getElementById("filtro").value = esAuto ? "Autos" : "Camiones";
+
+                switch (esAuto) {
+                    case false:
+                        document.getElementById("carga").value = carga.textContent || "";
+                        document.getElementById("autonomia").value = autonomia.textContent || "";
+                        document.getElementById("cantidadPuertas").disabled = true;
+                        document.getElementById("asiento").disabled = true;
+                        document.getElementById("carga").disabled = false;
+                        document.getElementById("autonomia").disabled = false;
+
+                        break;
+                    default:
+                        document.getElementById("cantidadPuertas").value = cantidadPuertas.textContent || "";
+                        document.getElementById("asiento").value = asientos.textContent || "";
+                        document.getElementById("carga").disabled = true;
+                        document.getElementById("autonomia").disabled = true;
+                        break;
+                }
+
+                document.getElementById("FormDatos").style.display = "none";
+                document.getElementById("formulario").style.display = "block";
+                document.getElementById('btn_eliminar').style.display = "block";
+                document.getElementById('btn_modificar').style.display = "block";
+                document.getElementById('btn_cancelar').style.display = "block";
+                document.getElementById('btn_agregar').style.display = "none";
+            });
+    }
+        selecciontabla()
+
+        function idUnico() 
+        {
+            return Date.now().toString();
+        }
+        
+        function agregarVehiculo() 
+        {
+            // Obtener los valores ingresados en el formulario "ABM"
+            const id = idUnico(); // Generar un ID único
+            const modelo = document.getElementById("modelo").value;
+            const anoFabricacion = document.getElementById("anoFabricacion").value;
+            const velMax = parseInt(document.getElementById("velMax").value);
+            const tipo = document.getElementById("filtro").value;
+            const cantidadPuertas = document.getElementById("cantidadPuertas").value;
+            const asiento = document.getElementById("asiento").value;
+            const carga = document.getElementById("carga").value;
+            const autonomia = document.getElementById("autonomia").value;
+
+
+
+            if (modelo !=null && anoFabricacion != null && velMax != null && tipo != null && cantidadPuertas != null && asiento != null && carga != null && autonomia != null) 
+            {
+                if(tipo=="Camiones")
+                { 
+                    if(carga<1 && autonomia<1){alert("Carga y autonomia debe ser mayor a 0");return false;}
+                    const nuevoVehiculo={id:id,modelo:modelo,anoFabricacion:anoFabricacion,velMax:velMax,carga:parseInt(carga),autonomia:parseInt(autonomia)};
+                    vehiculos.push(nuevoVehiculo);
+                    Camiones.push(nuevoVehiculo);
+                }
+                else
+                {
+                    if(cantidadPuertas<2 && asiento<2){alert("cantidad de puertas y asientos debe ser mayor a 2");return false;}
+                    const nuevoVehiculo={id:id,modelo:modelo,anoFabricacion:anoFabricacion,velMax:velMax,cantidadPuertas:parseInt(cantidadPuertas),asiento:parseInt(asiento)};
+                    vehiculos.push(nuevoVehiculo);
+                    Autos.push(nuevoVehiculo);
+                }    
+            }
+            else
+            {
+                alert("ERROR todos los campos deben ser completados");
+                return false;
+            }
+
+
+            // Agregar el nuevo registro a la tabla según el tipo (Ciudadano o Extranjero)
+            const tabla = document.getElementById("tablaDatos");
+            const fila = document.createElement("tr");
+
+            fila.innerHTML = `
+                <td>${id}</td>
+                <td>${modelo}</td>
+                <td>${anoFabricacion}</td>
+                <td>${velMax}</td>
+                ${tipo === "Camiones" ? `<td>${carga}</td>` : `<td>-</td>`}
+                ${tipo === "Camiones" ? `<td>${autonomia}</td>` : `<td>-</td>`}
+                ${tipo === "Autos" ? `<td>${cantidadPuertas}</td>` : `<td>-</td>`}
+                ${tipo === "Autos" ? `<td>${asiento}</td>` : `<td>-</td>`}        
+                `;
+                
+            tabla.appendChild(fila);
+
+            // Mostrar el formulario "Form Datos" nuevamente
+            document.getElementById("formulario").style.display = "none";
+            document.getElementById("FormDatos").style.display = "block";
+        }
+
+        document.getElementById("btn_agregar").addEventListener("click", agregarVehiculo);
+
+        function formulario()
+        {
+            document.getElementById("FormDatos").style.display = "none";
+            document.getElementById("formulario").style.display = "block";
+
+            document.getElementById("id").value="";
+            document.getElementById("modelo").value="";
+            document.getElementById("anoFabricacion").value="";
+            document.getElementById("velMax").value="";
+            document.getElementById("filtro").value="";
+            document.getElementById("cantidadPuertas").value="";
+            document.getElementById("asiento").value="";
+            document.getElementById("carga").value="";
+            document.getElementById("autonomia").value="";
+
+
+            document.getElementById('btn_eliminar').style.display = 'none';;
+            document.getElementById('btn_modificar').style.display = 'none';
+            document.getElementById('btn_cancelar').display = 'block';
+        }
+
+        function formdiv()
+        {
+
+            document.getElementById("formulario").style.display = "none";
+            document.getElementById("FormDatos").style.display = "block";  
+        }
+    
+
+        document.getElementById("btn_cancelar").onclick = formdiv;
+        document.getElementById("btn_registrar").onclick = formulario;
+
+        function ordenamiento(array, caracteristica) 
+        {
+            return array.sort(function(a, b) 
+            {
+                let valorA = a[caracteristica];
+                let valorB = b[caracteristica];
+
+                // Si el valor es "-", se considera "infinito" para que quede último
+                if (valorA === "-") valorA = Infinity;
+                if (valorB === "-") valorB = Infinity;
+
+                // Si la característica es numérica, compara los números
+                if (typeof valorA === 'number' && typeof valorB === 'number') 
+                {
+                    return valorA - valorB;
+                } 
+                else 
+                {
+                    // Si la característica no es numérica, convierte los valores a strings y compáralos
+                    return String(valorA).localeCompare(String(valorB));
+                }
+            });
+        }
+
+        function ordenarTabla(index)
+        {
+            let filtro = document.getElementById("filtro").value;
+            const tabla = document.getElementById("tablaDatos");
+            tabla.innerHTML = "";
+
+            switch (filtro) 
+            {
+                case "Camiones":
+                    ordenamiento(Camiones,index);
+                    llenarFomularioCamiones();
+                break;
+                    case "Autos":
+                        ordenamiento(Autos,index);
+                        llenarFomularioAutos();
+                break;
+                default:
+                    ordenamiento(vehiculos,index);
+                    cargarFormularioSinFiltro();
+                    break;
+            }
+        }
+
+        
+        const botonId = document.getElementById("orderID");
+        const botonModelo = document.getElementById("orderModelo");
+        const botonAnoFabricacion = document.getElementById("orderAnoFabricacion");
+        const botonVelMax = document.getElementById("orderVelMax");
+        const botonCantidadPuertas = document.getElementById("orderCantidadPuertas");
+        const botonAsientos = document.getElementById("orderAsientos");
+        const botonCarga = document.getElementById("orderCarga");
+        const botonAutonomia = document.getElementById("orderAutonomia");
+
+
+        //Asignamos la función genérica a los botones
+        botonId.onclick = () => ordenarTabla("id");
+        botonModelo.onclick = () => ordenarTabla("modelo");
+        botonAnoFabricacion.onclick = () => ordenarTabla("anoFabricacion");
+        botonVelMax.onclick = () => ordenarTabla("velMax");
+        botonCantidadPuertas.onclick = () => ordenarTabla("cantidadPuertas");
+        botonAsientos.onclick = () => ordenarTabla("asientos");
+        botonCarga.onclick = () => ordenarTabla("carga");
+        botonAutonomia.onclick = () => ordenarTabla("autonomia");
+
+
+
+        function eliminarPorId() 
+        {
+            let id =document.getElementById("id").value;
+            let tipo=document.getElementById("filtro").value;
+
+            const index = vehiculos.findIndex(item => item.id == id);
+
+            if (index != -1) 
+            {
+                vehiculos.splice(index, 1);
+            }
+            if (tipo == "Autos") 
+            {
+                let index2 = Autos.findIndex(item => item.id == id);
+                console.log(id);
+                Autos.splice(index2, 1);
+            }
+            else
+            {
+                let index3 = Camiones.findIndex(item => item.id == id);
+                Camiones.splice(index3, 1);
+            }
+
+            // Volver al formulario de datos
+            document.getElementById("formulario").style.display = "none";
+            document.getElementById("FormDatos").style.display = "block";
+            filtrar_datos();
+        }
+
+        function modificarPorId() 
+        {
+            let id =document.getElementById("id").value;
+            let tipo=document.getElementById("filtro").value;
+
+            eliminarPorId(); 
+
+            const modelo = document.getElementById("modelo").value;
+            const anoFabricacion = document.getElementById("anoFabricacion").value;
+            const velMax = parseInt(document.getElementById("velMax").value);
+            const cantidadpuertasOrigen = document.getElementById("cantidadPuertas").value;
+            const cargaOrigen = document.getElementById("carga").value;
+            const autonomiaOrigen = document.getElementById("autonomia").value;
+
+
+            if(tipo=="Auto")
+            { 
+                const nuevoVehiculo={id:id,modelo:modelo,anoFabricacion:anoFabricacion,velMax:velMax,cantidadPuertas:parseInt(cantidadPuertas), asientos:parseInt(asientos)};
+                vehiculos.push(nuevoVehiculo);
+                Autos.push(nuevoVehiculo);
+            }
+            else
+            {
+                const nuevoVehiculo={id:id,modelo:modelo,anoFabricacion:anoFabricacion,velMax:velMax,carga:parseInt(carga), autonomia:parseInt(autonomia)};
+                vehiculos.push(nuevoVehiculo);
+                Camiones.push(nuevoVehiculo);
+            }
+
+            filtrar_datos();
+        }
+
+        document.getElementById("btn_eliminar").addEventListener("click", eliminarPorId);
+        document.getElementById("btn_modificar").addEventListener("click", modificarPorId);
+    })
+
+    </script>
+    
+</head>
+<body>
+    <div id="FormDatos">
+        <h1 id="titulo">Form datos</h1>
+        
+        <label for="filtro">Filtrar por:</label>
+        <select id="filtro">
+            <option value="Todos">Todos</option>
+            <option value="Camiones">Camiones</option>
+            <option value="Autos">Autos</option>
+        </select>
+        <br>
+
+        <label for="nombre">Calcular velocidad maxima promedio:</label>
+        <input type="text" id="velocidadMaxima" name="velocidadMaxima" readonly>
+        
+        <button id="btnCalcular">Calcular</button>
+        <br>
+
+        <input type="checkbox" id="ID" name="ID" value="0" checked>
+        <label for="ID">ID</label>
+
+        <input type="checkbox" id="Modelo" name="Modelo" value="1" checked>
+        <label for="Modelo">Modelo</label>
+
+        <input type="checkbox" id="AnoFabricacion" name="AnoFabricacion" value="2" checked>
+        <label for="AnoFabricacion">Año Fabricacion</label>
+
+        <input type="checkbox" id="VelMax" name="VelMax" value="3" checked>
+        <label for="VelMax">Vel. Max</label>
+
+        <input type="checkbox" id="CantidadPuertas" name="CantidadPuertas" value="4" checked>
+        <label for="CantidadPuertas">Cantidad de puertas</label>
+
+        <input type="checkbox" id="Asientos" name="Asientos" value="5" checked>
+        <label for="Asientos">Asientos</label>
+
+        <input type="checkbox" id="Carga" name="Carga" value="6" checked>
+        <label for="Carga">Carga</label>
+
+        <input type="checkbox" id="Autonomia" name="Autonomia" value="7" checked>
+        <label for="Autonomia">Autonomia</label>
+        
+        
+        <table id="tabla_Autos_Camiones">
+            <thead>
+                <tr>
+                    <th><button type="button" id="orderID">ID</button></th>
+                    <th><button type="button" id="orderModelo">Modelo</button></th>
+                    <th><button type="button" id="orderAnoFabricacion">Año Fabricacion</button></th>
+                    <th><button type="button" id="orderVelMax">Vel. Max</button></th>
+                    <th><button type="button" id="orderCantidadPuertas">Cantidad de puertas</button></th>
+                    <th><button type="button" id="orderAsientos">Asientos</button></th>
+                    <th><button type="button" id="orderCarga">Carga</button></th>
+                    <th><button type="button" id="orderAutonomia">Autonomia</button></th>
+
+                </tr>
+            </thead>
+            <tbody id="tablaDatos">
+
+            </tbody>
+        </table>
+        <button id="btn_registrar"> Agregar </button> 
+    </div >
+        <br>
+            <div id="formulario" >
+            <h1>ABM</h1>
+            <label for="id">ID:</label>
+            <input type="text" id="id" name="id" readonly>
+        <br><br>
+        <label for="modelo">Modelo:</label>
+        <input type="text" id="modelo" name="modelo" >
+        <br><br>
+            <label for="anoFabricacion">Año Fabricacion:</label>
+            <input type="number" id="anoFabricacion" name="anoFabricacion" >
+        <br><br>
+            <label for="velMax">Vel.Max:</label>
+            <input type="number" id="velMax" name="velMax" >
+        <br><br>
+        <label for="filtro_ABM">Tipo</label>
+        <select id="filtro_AMB">
+            <option value="Auto">Auto</option>
+            <option value="Camion">Camion</option>
+        </select>
+        <br><br>
+            <label for="asiento">Asiento</label>
+            <input type="number" id="asiento" name="asiento" >   
+        <br><br>
+        <br><br>
+            <label for="cantidadPuertas">Cantidad de puertas</label>
+            <input type="number" id="cantidadPuertas" name="cantidadPuertas" >   
+        <br><br>
+        <br><br>
+            <label for="carga">Carga</label>
+            <input type="number" id="carga" name="carga" >   
+        <br><br>
+        <br><br>
+            <label for="autonomia">Autonomia</label>
+            <input type="number" id="autonomia" name="autonomia" >   
+        <br><br>
+
+        <button id="btn_agregar">Agregar</button>
+        <button id="btn_cancelar">Cancelar</button>
+        <button id="btn_eliminar">Eliminar</button>
+        <button id="btn_modificar">Modificar</button>
+
+    </div>
+</body>
+</html>
