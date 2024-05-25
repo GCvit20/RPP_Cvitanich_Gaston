@@ -203,7 +203,8 @@
             let filtro = document.getElementById("filtro").value;
             let promedio = 0;
 
-            switch (filtro) {
+            switch (filtro) 
+            {
                 case "Camiones":
                     promedio = calcularPromedioVelocidadMaxima(Camiones);
                     break;
@@ -332,8 +333,6 @@
                 return false;
             }
 
-
-            // Agregar el nuevo registro a la tabla según el tipo (Ciudadano o Extranjero)
             const tabla = document.getElementById("tablaDatos");
             const fila = document.createElement("tr");
 
@@ -350,7 +349,6 @@
                 
             tabla.appendChild(fila);
 
-            // Mostrar el formulario "Form Datos" nuevamente
             document.getElementById("formulario").style.display = "none";
             document.getElementById("FormDatos").style.display = "block";
         }
